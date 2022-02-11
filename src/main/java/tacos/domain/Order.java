@@ -1,5 +1,9 @@
 package tacos.domain;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -10,6 +14,8 @@ import lombok.Data;
 
 @Data
 public class Order {
+	private long id;
+	private LocalDate placedAt;
 
 	@NotBlank(message="Name is required")
 	private String deliveryName;
@@ -35,4 +41,10 @@ public class Order {
 
 	@Digits(integer=3, fraction=0, message="Invalid CVV")
 	private String ccCVV;
+
+	private List<Taco> tacoList = new ArrayList<>();
+
+	public void addDesign(Taco design) {
+		this.tacoList.add(design);
+	}
 }
