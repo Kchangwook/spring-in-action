@@ -1,5 +1,7 @@
 package tacos.converter;
 
+import java.util.Optional;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,7 @@ public class IngredientByIdConverter implements Converter<String, Ingredient> {
 
 	@Override
 	public Ingredient convert(String source) {
-		return ingredientRepository.findById(source);
+		Optional<Ingredient> optionalIngredient = ingredientRepository.findById(source);
+		return optionalIngredient.orElse(null);
 	}
 }

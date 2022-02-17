@@ -1,9 +1,17 @@
 package tacos.domain;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -13,7 +21,11 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 import lombok.Data;
 
 @Data
-public class Order {
+@Entity
+@Table(name = "taco_order")
+public class Order implements Serializable {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private LocalDate placedAt;
 
@@ -42,9 +54,15 @@ public class Order {
 	@Digits(integer=3, fraction=0, message="Invalid CVV")
 	private String ccCVV;
 
+	@ManyToMany
 	private List<Taco> tacoList = new ArrayList<>();
 
 	public void addDesign(Taco design) {
 		this.tacoList.add(design);
+	}
+
+	@PrePersist
+	public void placedAt() {
+		this.placedAt = LocalDate.now();
 	}
 }

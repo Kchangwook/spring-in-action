@@ -1,5 +1,6 @@
 package tacos.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +46,8 @@ public class DesignTacoController {
 
 	@GetMapping
 	public String showDesignForm(Model model) {
-		List<Ingredient> ingredients = ingredientRepository.findAll();
+		List<Ingredient> ingredients = new ArrayList<>();
+		ingredientRepository.findAll().forEach(ingredients::add);
 
 		Type[] types = Type.values();
 		for (Type type : types) {
