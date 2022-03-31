@@ -13,4 +13,9 @@ spring:
         - schema.sql
     jndi-name: java:/comp/env/jdbc/tacoCloudDS
 
-
+logging:
+  level:
+    root: WARN
+    org:
+      springframework:
+        security: DEBUG
