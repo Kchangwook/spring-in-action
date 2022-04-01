@@ -19,3 +19,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+taco:
+  orders:
+    pageSize: 10
