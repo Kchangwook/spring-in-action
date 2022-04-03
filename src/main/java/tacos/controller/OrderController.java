@@ -18,6 +18,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tacos.config.properties.OrderProperties;
 import tacos.domain.Order;
 import tacos.domain.User;
 import tacos.repository.OrderRepository;
@@ -27,15 +28,9 @@ import tacos.repository.OrderRepository;
 @RequiredArgsConstructor
 @RequestMapping("/orders")
 @SessionAttributes("order")
-@ConfigurationProperties(prefix="taco.orders")
 public class OrderController {
 	private final OrderRepository orderRepository;
-
-	private int pageSize = 20;
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+	private final OrderProperties orderProperties;
 
 	@GetMapping("/current")
 	public String orderForm(@AuthenticationPrincipal User user,
@@ -78,7 +73,7 @@ public class OrderController {
 
 	@GetMapping
 	public String ordersForUser(@AuthenticationPrincipal User user, Model model) {
-		Pageable pageable = PageRequest.of(0, pageSize);
+		Pageable pageable = PageRequest.of(0, orderProperties.getPageSize());
 		model.addAttribute("orders", orderRepository.findByUserOrderByPlacedAtDesc(user, pageable));
 		return "orderList";
 	}
