@@ -2,12 +2,16 @@ package tacos.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -82,5 +86,17 @@ public class DesignTacoController {
 		order.addDesign(saved);
 
 		return "redirect:/orders/current";
+	}
+
+	@GetMapping("/recent")
+	public EntityModel<List<Taco>> recentTacos() {
+		PageRequest pageRequest = PageRequest.of(0, 12, Sort.by("createdAt").descending());
+		List<Taco> tacoList = tacoRepository.findAll(pageRequest).getContent();
+
+		EntityModel<List<Taco>> recentResources = EntityModel.of(tacoList);
+		recentResources.add(WebMvcLinkBuilder.linkTo(DesignTacoController.class)
+			.slash("recent")
+			.withRel("recents"));
+		return recentResources;
 	}
 }
