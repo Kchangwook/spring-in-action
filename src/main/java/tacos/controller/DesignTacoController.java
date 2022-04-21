@@ -9,8 +9,8 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tacos.api.TacoAssembler;
+import tacos.api.TacoEntityModel;
 import tacos.domain.Ingredient;
 import tacos.domain.Order;
 import tacos.domain.Taco;
@@ -89,13 +91,12 @@ public class DesignTacoController {
 	}
 
 	@GetMapping("/recent")
-	public EntityModel<List<Taco>> recentTacos() {
+	public CollectionModel<TacoEntityModel> recentTacos() {
 		PageRequest pageRequest = PageRequest.of(0, 12, Sort.by("createdAt").descending());
 		List<Taco> tacoList = tacoRepository.findAll(pageRequest).getContent();
 
-		EntityModel<List<Taco>> recentResources = EntityModel.of(tacoList);
-		recentResources.add(WebMvcLinkBuilder.linkTo(DesignTacoController.class)
-			.slash("recent")
+		CollectionModel<TacoEntityModel> recentResources = new TacoAssembler().toCollectionModel(tacoList);
+		recentResources.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DesignTacoController.class).recentTacos())
 			.withRel("recents"));
 		return recentResources;
 	}
