@@ -12,6 +12,9 @@ spring:
         - data.sql
         - schema.sql
     jndi-name: java:/comp/env/jdbc/tacoCloudDS
+  data:
+    rest:
+      base-path: /api
 
 logging:
   level:
