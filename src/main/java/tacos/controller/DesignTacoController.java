@@ -89,15 +89,4 @@ public class DesignTacoController {
 
 		return "redirect:/orders/current";
 	}
-
-	@GetMapping("/recent")
-	public CollectionModel<TacoEntityModel> recentTacos() {
-		PageRequest pageRequest = PageRequest.of(0, 12, Sort.by("createdAt").descending());
-		List<Taco> tacoList = tacoRepository.findAll(pageRequest).getContent();
-
-		CollectionModel<TacoEntityModel> recentResources = new TacoAssembler().toCollectionModel(tacoList);
-		recentResources.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DesignTacoController.class).recentTacos())
-			.withRel("recents"));
-		return recentResources;
-	}
 }
