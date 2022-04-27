@@ -15,6 +15,10 @@ spring:
   data:
     rest:
       base-path: /api
+  artemis:
+    broker-url: tcp://activemq.tacocloud.com
+    user: tacoweb
+    password: l3tm31n
 
 logging:
   level:
